@@ -26,12 +26,7 @@ class LoginController extends Controller
 
             ActivityLog::log('login', 'User login: ' . auth()->user()->email);
 
-            return match (auth()->user()->role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'dosen' => redirect()->route('dosen.dashboard'),
-                'mahasiswa' => redirect()->route('mahasiswa.dashboard'),
-                default => redirect('/'),
-            };
+            return redirect('/');
         }
 
         return back()->withErrors([
@@ -47,6 +42,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Anda telah berhasil logout.');
+        return redirect()->route('home')->with('success', 'Anda telah berhasil logout.');
     }
 }

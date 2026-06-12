@@ -26,13 +26,17 @@
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #1e1b4b;
+    background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-    background: #4338ca;
+    background: #cbd5e1;
     border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Glassmorphism utility */
@@ -118,4 +122,163 @@
 @keyframes badgeBounce {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.2); }
+}
+
+/* ─── Dashboard Light Mode Overrides ─── */
+.dashboard-layout {
+    /* Cards and panels background and borders */
+    .bg-slate-800\/50, .bg-slate-900\/50, .bg-slate-900\/80 {
+        background-color: #ffffff !important;
+    }
+    
+    .border-white\/5, .border-white\/10 {
+        border-color: #e2e8f0 !important;
+    }
+    
+    .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+        border-color: #e2e8f0 !important;
+    }
+    
+    .border-t.border-white\/10, .border-b.border-white\/10 {
+        border-color: #f1f5f9 !important;
+    }
+    
+    /* Text colors */
+    .text-white {
+        color: #1e293b !important;
+    }
+    
+    .text-slate-300 {
+        color: #334155 !important;
+    }
+    
+    .text-slate-400 {
+        color: #64748b !important;
+    }
+    
+    th.text-slate-300 {
+        color: #475569 !important;
+    }
+    
+    /* Inputs, Selects, and Textareas */
+    input, select, textarea {
+        background-color: #ffffff !important;
+        border-color: #cbd5e1 !important;
+        color: #1e293b !important;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #6366f1 !important;
+        --tw-ring-color: rgba(99, 102, 241, 0.2) !important;
+    }
+    
+    input::placeholder, textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+    
+    select option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+    
+    /* Hover transitions */
+    .hover\:bg-white\/5:hover {
+        background-color: #f8fafc !important;
+    }
+    
+    /* Table hover */
+    tr.hover\:bg-white\/5:hover {
+        background-color: #f1f5f9/60 !important;
+    }
+    
+    /* Buttons active states */
+    .bg-indigo-500\/20 {
+        background-color: #e0e7ff !important;
+        color: #4f46e5 !important;
+    }
+    .text-indigo-300 {
+        color: #4f46e5 !important;
+    }
+    
+    /* File upload fields */
+    .bg-white\/5 {
+        background-color: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+    }
+    
+    .text-indigo-400 {
+        color: #4f46e5 !important;
+    }
+    .text-indigo-400:hover {
+        color: #4338ca !important;
+    }
+    
+    /* Notification items and activity logs */
+    .bg-indigo-500\/5 {
+        background-color: #eef2ff !important;
+    }
+    
+    /* Logbook card items */
+    .bg-slate-800\/40 {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+    }
+    
+    /* Dashboard specific background cards */
+    .from-indigo-600\/20 {
+        --tw-gradient-from: rgba(99, 102, 241, 0.08) !important;
+    }
+    .to-purple-600\/20 {
+        --tw-gradient-to: rgba(124, 58, 237, 0.04) !important;
+    }
+    .border-indigo-500\/20 {
+        border-color: rgba(99, 102, 241, 0.15) !important;
+    }
+    
+    /* Quick Action cards (indigo/blue/purple) */
+    .from-blue-600\/10 {
+        --tw-gradient-from: rgba(37, 99, 235, 0.05) !important;
+    }
+    .to-blue-500\/5 {
+        --tw-gradient-to: rgba(59, 130, 246, 0.02) !important;
+    }
+    .border-blue-500\/20 {
+        border-color: rgba(37, 99, 235, 0.15) !important;
+    }
+    .border-blue-500\/40:hover {
+        border-color: rgba(37, 99, 235, 0.4) !important;
+    }
+    
+    .from-purple-600\/10 {
+        --tw-gradient-from: rgba(124, 58, 237, 0.05) !important;
+    }
+    .to-purple-500\/5 {
+        --tw-gradient-to: rgba(139, 92, 246, 0.02) !important;
+    }
+    .border-purple-500\/20 {
+        border-color: rgba(124, 58, 237, 0.15) !important;
+    }
+    .border-purple-500\/40:hover {
+        border-color: rgba(124, 58, 237, 0.4) !important;
+    }
+    
+    .from-amber-600\/10 {
+        --tw-gradient-from: rgba(217, 119, 6) !important;
+        opacity: 0.05;
+    }
+    .to-amber-500\/5 {
+        --tw-gradient-to: rgba(245, 158, 11) !important;
+        opacity: 0.02;
+    }
+    .border-amber-500\/20 {
+        border-color: rgba(217, 119, 6, 0.15) !important;
+    }
+    .border-amber-500\/40:hover {
+        border-color: rgba(217, 119, 6, 0.4) !important;
+    }
+    
+    /* Text classes matching the original intent but in light mode */
+    h3 {
+        color: #1e293b !important;
+    }
 }

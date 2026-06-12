@@ -10,6 +10,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    {{-- Floating Back to Beranda Button --}}
+    <div class="fixed top-6 left-6 z-20">
+        <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-slate-200 hover:text-white hover:bg-white/20 transition-all duration-200 text-sm font-semibold shadow-lg backdrop-blur-md">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Kembali ke Beranda
+        </a>
+    </div>
+
     {{-- Decorative Elements --}}
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-1/4 -left-20 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl"></div>
@@ -20,12 +28,14 @@
     <div class="w-full max-w-md relative z-10 animate-fade-in">
         {{-- Logo --}}
         <div class="text-center mb-8">
-            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center shadow-xl shadow-indigo-500/30 mb-4">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-            </div>
-            <h1 class="text-3xl font-extrabold gradient-text">InternHub</h1>
+            <a href="{{ url('/') }}" class="inline-block group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center shadow-xl shadow-indigo-500/30 mb-4 group-hover:scale-105 transition-all duration-300">
+                    <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-extrabold gradient-text">InternHub</h1>
+            </a>
             <p class="text-slate-400 text-sm mt-1">Sistem Informasi Manajemen Magang Mahasiswa</p>
         </div>
 

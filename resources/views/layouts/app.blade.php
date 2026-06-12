@@ -10,7 +10,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-slate-950 text-white min-h-screen">
+<body class="bg-slate-50 text-slate-800 min-h-screen dashboard-layout">
     <div class="flex min-h-screen" x-data="{ sidebarOpen: false }">
         {{-- Sidebar Overlay (Mobile) --}}
         <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
@@ -22,31 +22,33 @@
         {{-- Sidebar --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
                class="fixed inset-y-0 left-0 z-50 w-72 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:z-auto">
-            <div class="flex flex-col h-full glass border-r border-white/10 bg-slate-900/80">
+            <div class="flex flex-col h-full bg-white border-r border-slate-200">
                 {{-- Logo --}}
-                <div class="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <div class="flex items-center gap-3 px-6 py-6 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold gradient-text">InternHub</h1>
+                        <h1 class="text-lg font-extrabold tracking-tight">
+                            <span class="text-indigo-600">Intern</span><span class="text-slate-800">Hub</span>
+                        </h1>
                         <p class="text-xs text-slate-400">Manajemen Magang</p>
                     </div>
-                    <button @click="sidebarOpen = false" class="lg:hidden ml-auto text-slate-400 hover:text-white">
+                    <button @click="sidebarOpen = false" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
 
                 {{-- User Info --}}
-                <div class="px-6 py-4 border-b border-white/5">
+                <div class="px-6 py-4 border-b border-slate-100">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-sm font-bold">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-indigo-500/20">
                             {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold truncate">{{ auth()->user()->name }}</p>
+                            <p class="text-sm font-bold text-slate-700 truncate">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-slate-400">{{ auth()->user()->role_label }}</p>
                         </div>
                     </div>
@@ -58,10 +60,10 @@
                 </nav>
 
                 {{-- Logout --}}
-                <div class="px-4 py-4 border-t border-white/10">
+                <div class="px-4 py-4 border-t border-slate-100">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200">
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-semibold">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                             Keluar
                         </button>
@@ -73,19 +75,19 @@
         {{-- Main Content --}}
         <div class="flex-1 flex flex-col min-w-0">
             {{-- Top Bar --}}
-            <header class="sticky top-0 z-30 glass border-b border-white/10 bg-slate-900/60">
+            <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
                 <div class="flex items-center justify-between px-4 sm:px-6 py-4">
                     <div class="flex items-center gap-4">
-                        <button @click="sidebarOpen = true" class="lg:hidden text-slate-400 hover:text-white">
+                        <button @click="sidebarOpen = true" class="lg:hidden text-slate-500 hover:text-indigo-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
-                        <h2 class="text-lg sm:text-xl font-bold">@yield('page-title', 'Dashboard')</h2>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">@yield('page-title', 'Dashboard')</h2>
                     </div>
 
                     <div class="flex items-center gap-3">
                         {{-- Notification Bell --}}
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="relative p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200">
+                            <button @click="open = !open" class="relative p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-all duration-200">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                                 @php $unreadCount = auth()->user()->appNotifications()->where('is_read', false)->count(); @endphp
                                 @if($unreadCount > 0)
@@ -101,23 +103,23 @@
                                  x-transition:leave="transition ease-in duration-150"
                                  x-transition:leave-start="opacity-100 scale-100"
                                  x-transition:leave-end="opacity-0 scale-95"
-                                 class="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-white/10 bg-slate-800 shadow-2xl shadow-black/40 overflow-hidden z-50">
-                                <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                                    <h3 class="font-semibold text-sm">Notifikasi</h3>
+                                 class="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden z-50">
+                                <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                                    <h3 class="font-bold text-sm text-slate-700">Notifikasi</h3>
                                     @if($unreadCount > 0)
-                                        <span class="text-xs text-indigo-400">{{ $unreadCount }} belum dibaca</span>
+                                        <span class="text-xs font-semibold text-indigo-600">{{ $unreadCount }} belum dibaca</span>
                                     @endif
                                 </div>
                                 <div class="max-h-80 overflow-y-auto">
                                     @php $latestNotifs = auth()->user()->appNotifications()->take(5)->get(); @endphp
                                     @forelse($latestNotifs as $notif)
-                                        <div class="px-4 py-3 border-b border-white/5 hover:bg-white/5 transition {{ !$notif->is_read ? 'bg-indigo-500/5' : '' }}">
-                                            <p class="text-sm font-medium {{ !$notif->is_read ? 'text-indigo-300' : 'text-slate-300' }}">{{ $notif->title }}</p>
-                                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">{{ $notif->message }}</p>
-                                            <p class="text-xs text-slate-500 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                        <div class="px-4 py-3 border-b border-slate-50 hover:bg-slate-50/50 transition {{ !$notif->is_read ? 'bg-indigo-50/30' : '' }}">
+                                            <p class="text-sm font-bold {{ !$notif->is_read ? 'text-indigo-600' : 'text-slate-700' }}">{{ $notif->title }}</p>
+                                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ $notif->message }}</p>
+                                            <p class="text-xs text-slate-400 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
                                         </div>
                                     @empty
-                                        <div class="px-4 py-8 text-center text-slate-500">
+                                        <div class="px-4 py-8 text-center text-slate-400">
                                             <svg class="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
                                             <p class="text-sm">Tidak ada notifikasi</p>
                                         </div>
@@ -125,7 +127,7 @@
                                 </div>
                                 @if($latestNotifs->isNotEmpty())
                                     <a href="{{ route(auth()->user()->role === 'mahasiswa' ? 'mahasiswa.notifications.index' : (auth()->user()->role === 'dosen' ? 'dosen.notifications.index' : 'admin.activity-log.index')) }}"
-                                       class="block px-4 py-3 text-center text-sm text-indigo-400 hover:bg-white/5 border-t border-white/10 transition">
+                                       class="block px-4 py-3 text-center text-sm font-bold text-indigo-600 hover:bg-slate-50 border-t border-slate-100 transition">
                                         Lihat Semua →
                                     </a>
                                 @endif

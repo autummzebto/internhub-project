@@ -96,9 +96,45 @@
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
             border-color: #6366f1;
         }
+
+        /* ─── User dropdown ─── */
+        .user-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* ─── Toast notification ─── */
+        .toast {
+            animation: toastIn 0.4s ease-out, toastOut 0.4s ease-in 3.6s forwards;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to   { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 antialiased">
+    {{-- ═══════════════════════ FLASH MESSAGE TOAST ═══════════════════════ --}}
+    @if(session('success'))
+        <div id="toast" class="toast fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-white border border-emerald-200 rounded-2xl px-6 py-4 shadow-2xl shadow-emerald-500/10 flex items-center gap-3">
+            <div class="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-slate-700">{{ session('success') }}</p>
+        </div>
+        <script>setTimeout(() => document.getElementById('toast')?.remove(), 4000);</script>
+    @endif
     {{-- ═══════════════════════ NAVBAR ═══════════════════════ --}}
     <nav id="mainNav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -132,11 +168,52 @@
                                 'mahasiswa' => route('mahasiswa.dashboard'),
                                 default     => route('login'),
                             };
+                            $roleLabel = match(auth()->user()->role) {
+                                'admin'     => 'Administrator',
+                                'dosen'     => 'Dosen Pembimbing',
+                                'mahasiswa' => 'Mahasiswa',
+                                default     => 'User',
+                            };
                         @endphp
-                        <a href="{{ $dashRoute }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:from-indigo-500 hover:to-violet-500 transition-all duration-300">
+                        {{-- Dashboard button --}}
+                        <a href="{{ $dashRoute }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl transition-all duration-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                             Dashboard
                         </a>
+
+                        {{-- User dropdown --}}
+                        <div class="relative">
+                            <button id="userDropdownBtn" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-all duration-200">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-indigo-500/20">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                </div>
+                                <div class="hidden sm:block text-left">
+                                    <p class="text-sm font-semibold text-slate-700 leading-tight">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-slate-400">{{ $roleLabel }}</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+
+                            <div id="userDropdown" class="user-dropdown absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-200/50 py-2 z-50">
+                                <div class="px-4 py-3 border-b border-slate-100">
+                                    <p class="text-sm font-bold text-slate-700">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">{{ auth()->user()->email }}</p>
+                                </div>
+                                <a href="{{ $dashRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                    Dashboard
+                                </a>
+                                <div class="border-t border-slate-100 mt-1 pt-1">
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-500 hover:text-red-600 hover:bg-red-50 transition rounded-b-2xl">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                            Keluar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @else
                         <a href="{{ route('register') }}" class="hidden sm:inline-flex px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl transition-all duration-200">Daftar</a>
                         <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:from-indigo-500 hover:to-violet-500 transition-all duration-300">
@@ -157,9 +234,15 @@
                 <a href="#lowongan" class="block px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition">Cari Lowongan</a>
                 <a href="#perusahaan" class="block px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition">Perusahaan Mitra</a>
                 <a href="#tentang" class="block px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition">Tentang InternHub</a>
-                @guest
+                @auth
+                    <a href="{{ $dashRoute }}" class="block px-4 py-2.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition">Dashboard</a>
+                    <form action="{{ route('logout') }}" method="POST" class="block">
+                        @csrf
+                        <button type="submit" class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg transition">Keluar</button>
+                    </form>
+                @else
                     <a href="{{ route('register') }}" class="block px-4 py-2.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition">Daftar Akun</a>
-                @endguest
+                @endauth
             </div>
         </div>
     </nav>
@@ -200,9 +283,24 @@
                             Jelajahi Lowongan
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </a>
-                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-slate-700 font-bold rounded-2xl border-2 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all duration-300">
-                            Daftar Gratis
-                        </a>
+                        @auth
+                            @php
+                                $heroDashRoute = match(auth()->user()->role) {
+                                    'admin'     => route('admin.dashboard'),
+                                    'dosen'     => route('dosen.dashboard'),
+                                    'mahasiswa' => route('mahasiswa.dashboard'),
+                                    default     => route('home'),
+                                };
+                            @endphp
+                            <a href="{{ $heroDashRoute }}" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-slate-700 font-bold rounded-2xl border-2 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                Ke Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-slate-700 font-bold rounded-2xl border-2 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all duration-300">
+                                Daftar Gratis
+                            </a>
+                        @endauth
                     </div>
                 </div>
 
@@ -531,17 +629,36 @@
                 <div class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
 
                 <div class="relative px-8 py-16 lg:px-16 lg:py-20 text-center">
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Siap Memulai Perjalanan Magang Anda?</h2>
-                    <p class="text-indigo-100 text-lg max-w-xl mx-auto mb-8">Daftar sekarang dan temukan peluang magang terbaik yang sesuai dengan passion Anda.</p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-700 font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:bg-indigo-50 transition-all duration-300 transform hover:scale-[1.02]">
-                            Daftar Sekarang
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </a>
-                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-bold rounded-2xl border-2 border-white/20 hover:bg-white/20 transition-all duration-300">
-                            Sudah Punya Akun? Masuk
-                        </a>
-                    </div>
+                    @auth
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Selamat Datang Kembali, {{ auth()->user()->name }}!</h2>
+                        <p class="text-indigo-100 text-lg max-w-xl mx-auto mb-8">Kelola magang Anda dari dashboard. Pantau progres, isi logbook, dan kelola laporan dengan mudah.</p>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            @php
+                                $ctaDashRoute = match(auth()->user()->role) {
+                                    'admin'     => route('admin.dashboard'),
+                                    'dosen'     => route('dosen.dashboard'),
+                                    'mahasiswa' => route('mahasiswa.dashboard'),
+                                    default     => route('home'),
+                                };
+                            @endphp
+                            <a href="{{ $ctaDashRoute }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-700 font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:bg-indigo-50 transition-all duration-300 transform hover:scale-[1.02]">
+                                Ke Dashboard
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                    @else
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Siap Memulai Perjalanan Magang Anda?</h2>
+                        <p class="text-indigo-100 text-lg max-w-xl mx-auto mb-8">Daftar sekarang dan temukan peluang magang terbaik yang sesuai dengan passion Anda.</p>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-700 font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:bg-indigo-50 transition-all duration-300 transform hover:scale-[1.02]">
+                                Daftar Sekarang
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-bold rounded-2xl border-2 border-white/20 hover:bg-white/20 transition-all duration-300">
+                                Sudah Punya Akun? Masuk
+                            </a>
+                        </div>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -578,8 +695,26 @@
                 <div>
                     <h4 class="font-bold text-sm mb-4 text-slate-300 uppercase tracking-wide">Akun</h4>
                     <ul class="space-y-2.5 text-sm text-slate-400">
-                        <li><a href="{{ route('login') }}" class="hover:text-indigo-400 transition">Login</a></li>
-                        <li><a href="{{ route('register') }}" class="hover:text-indigo-400 transition">Daftar Mahasiswa</a></li>
+                        @auth
+                            @php
+                                $footerDashRoute = match(auth()->user()->role) {
+                                    'admin'     => route('admin.dashboard'),
+                                    'dosen'     => route('dosen.dashboard'),
+                                    'mahasiswa' => route('mahasiswa.dashboard'),
+                                    default     => route('home'),
+                                };
+                            @endphp
+                            <li><a href="{{ $footerDashRoute }}" class="hover:text-indigo-400 transition">Dashboard</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="hover:text-indigo-400 transition">Keluar</button>
+                                </form>
+                            </li>
+                        @else
+                            <li><a href="{{ route('login') }}" class="hover:text-indigo-400 transition">Login</a></li>
+                            <li><a href="{{ route('register') }}" class="hover:text-indigo-400 transition">Daftar Mahasiswa</a></li>
+                        @endauth
                     </ul>
                 </div>
             </div>
@@ -605,6 +740,21 @@
         if (mobileMenuBtn && mobileMenu) {
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // ─── User dropdown toggle ───
+        const userDropdownBtn = document.getElementById('userDropdownBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdownBtn && userDropdown) {
+            userDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+            });
+            document.addEventListener('click', (e) => {
+                if (!userDropdown.contains(e.target) && !userDropdownBtn.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
             });
         }
 
