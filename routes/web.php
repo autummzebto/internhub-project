@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+
 // ── Auth Controllers ──
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -37,7 +39,7 @@ use App\Http\Controllers\Admin\ActivityLogController as AdminActivityLog;
 | Public / Guest Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn () => redirect()->route('login'));
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showForm'])->name('login');
